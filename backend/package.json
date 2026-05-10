@@ -9,11 +9,11 @@
     "dev": "nodemon src/server.js",
     "start": "node src/server.js"
   },
-
   "author": "john chege",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.3",
+    "chat-app": "file:..",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
