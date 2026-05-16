@@ -22,7 +22,15 @@ if (process.env.NODE_ENV === 'production') {
   }); 
 }
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-  dbConnection()
-});
+const startServer = async () => {
+  try {
+    await dbConnection();
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error('Failed to connect to database, server not started:', error.message);
+  }
+};
+
+startServer();

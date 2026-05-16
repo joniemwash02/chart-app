@@ -29,22 +29,20 @@ export const signup = async (req, res) => {
             email,
             password: hashedPassword,
         });
-        if(newUser) {
-            generateToken(newUser._id, res);
-            await newUser.save();
-            res.status(201).json({ 
-                _id: newUser._id,
-                fullName: newUser.fullName,
-                email: newUser.email, 
-                profilePic: newUser.profilePic,
-            });
-            //send a welcome email to the user
-        }else {
-            console.log('Error in signup controller',error);
-            return res.status(400).json({ message: 'Invalid user data' });
-        }   
+        generateToken(newUser._id, res);
+        await newUser.save();
+        res.status(201).json({ 
+            _id: newUser._id,
+            fullName: newUser.fullName,
+            email: newUser.email, 
+            profilePic: newUser.profilePic,
+        });
+        //send a welcome email to the user
 
     } catch (error) {
+        if (error.code === 11000 || error.codeName === 'DuplicateKey') {
+            return res.status(400).json({ message: 'User already exists' });
+        }
         res.status(500).json({ message: 'Internal server error' });
     }
 
