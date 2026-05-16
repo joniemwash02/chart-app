@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth.route.js';
 import messagesRoutes from './routes/messages.routes.js';
 import path from 'path';
+import { dbConnection } from './lib/db.js';
 dotenv.config();
 const app = express();
 app.use(express.json());
@@ -21,6 +22,15 @@ if (process.env.NODE_ENV === 'production') {
   }); 
 }
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+const startServer = async () => {
+  try {
+    await dbConnection();
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error('Failed to connect to database, server not started:', error.message);
+  }
+};
+
+startServer();
