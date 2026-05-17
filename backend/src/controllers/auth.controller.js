@@ -1,4 +1,4 @@
-import e from "express";
+
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../lib/utils.js";
@@ -29,15 +29,20 @@ export const signup = async (req, res) => {
             email,
             password: hashedPassword,
         });
-        generateToken(newUser._id, res);
-        await newUser.save();
-        res.status(201).json({ 
+        if (newUser) {
+            const savedUser = await newUser.save();
+            generateToken(newUser._id, res);
+            res.status(201).json({ 
             _id: newUser._id,
             fullName: newUser.fullName,
             email: newUser.email, 
             profilePic: newUser.profilePic,
         });
+
         //send a welcome email to the user
+
+    }
+        
 
     } catch (error) {
         if (error.code === 11000 || error.codeName === 'DuplicateKey') {
